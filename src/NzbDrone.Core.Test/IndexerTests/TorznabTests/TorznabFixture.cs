@@ -30,7 +30,8 @@ namespace NzbDrone.Core.Test.IndexerTests.TorznabTests
                 Settings = new TorznabSettings()
                 {
                     BaseUrl = "http://indexer.local/"
-                }
+                },
+                Protocol = DownloadProtocol.Torrent
             };
 
             _caps = new IndexerCapabilities();

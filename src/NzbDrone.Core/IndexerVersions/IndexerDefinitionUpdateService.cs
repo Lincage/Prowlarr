@@ -25,8 +25,10 @@ namespace NzbDrone.Core.IndexerVersions
     public class IndexerDefinitionUpdateService : IIndexerDefinitionUpdateService, IExecute<IndexerDefinitionUpdateCommand>
     {
         /* Update Service will fall back if version # does not exist for an indexer  per Ta */
+        private const int DEFINITION_VERSION = 4;
 
-        private const int DEFINITION_VERSION = 3;
+        // ToDo Update branch back to master
+        private const string DEFINITION_BRANCH = "usenet-v4";
         private readonly List<string> _defintionBlocklist = new List<string>()
         {
             "aither",
@@ -76,7 +78,7 @@ namespace NzbDrone.Core.IndexerVersions
 
             try
             {
-                var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
+                var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
                 var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
                 indexerList = response.Resource.Where(i => !_defintionBlocklist.Contains(i.File)).ToList();
 
@@ -141,7 +143,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private CardigannDefinition GetHttpDefinition(string id)
         {
-            var req = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{id}");
+            var req = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{id}");
             var response = _httpClient.Get(req);
             var definition = _deserializer.Deserialize<CardigannDefinition>(response.Content);
             return CleanIndexerDefinition(definition);
@@ -206,6 +208,11 @@ namespace NzbDrone.Core.IndexerVersions
                 definition.Login.Method = "form";
             }
 
+            if (definition.Protocol == null)
+            {
+                definition.Protocol = "torrent";
+            }
+
             if (definition.Search.Paths == null)
             {
                 definition.Search.Paths = new List<SearchPathBlock>();
@@ -238,7 +245,7 @@ namespace NzbDrone.Core.IndexerVersions
 
         private void UpdateLocalDefinitions()
         {
-            var request = new HttpRequest($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}");
+            var request = new HttpRequest($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}");
             var response = _httpClient.Get<List<CardigannMetaDefinition>>(request);
 
             foreach (var def in response.Resource)
@@ -251,7 +258,7 @@ namespace NzbDrone.Core.IndexerVersions
 
                     var saveFile = Path.Combine(startupFolder, "Definitions", $"{def.File}.yml");
 
-                    _httpClient.DownloadFile($"https://indexers.prowlarr.com/master/{DEFINITION_VERSION}/{def.File}", saveFile);
+                    _httpClient.DownloadFile($"https://indexers.prowlarr.com/{DEFINITION_BRANCH}/{DEFINITION_VERSION}/{def.File}", saveFile);
 
                     _cache.Remove(def.File);
 

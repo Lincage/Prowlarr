@@ -24,7 +24,8 @@ namespace NzbDrone.Core.Test.IndexerTests.FileListTests
             Subject.Definition = new IndexerDefinition()
             {
                 Name = "FileList",
-                Settings = new FileListSettings() { Username = "someuser", Passkey = "somepass" }
+                Settings = new FileListSettings() { Username = "someuser", Passkey = "somepass" },
+                Protocol = DownloadProtocol.Torrent
             };
         }
 

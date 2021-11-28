@@ -29,7 +29,8 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
             Subject.Definition = new IndexerDefinition()
             {
                 Name = "HdBits",
-                Settings = new HDBitsSettings() { ApiKey = "fakekey" }
+                Settings = new HDBitsSettings() { ApiKey = "fakekey" },
+                Protocol = DownloadProtocol.Torrent
             };
 
             _movieSearchCriteria = new MovieSearchCriteria

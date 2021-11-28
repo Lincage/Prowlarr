@@ -26,7 +26,8 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
             Subject.Definition = new IndexerDefinition()
             {
                 Name = "Rarbg",
-                Settings = new RarbgSettings()
+                Settings = new RarbgSettings(),
+                Protocol = DownloadProtocol.Torrent
             };
 
             Mocker.GetMock<IRarbgTokenProvider>()

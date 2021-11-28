@@ -24,7 +24,8 @@ namespace NzbDrone.Core.Test.IndexerTests.PTPTests
             Subject.Definition = new IndexerDefinition()
             {
                 Name = "PTP",
-                Settings = new PassThePopcornSettings() { APIUser = "asdf", APIKey = "sad" }
+                Settings = new PassThePopcornSettings() { APIUser = "asdf", APIKey = "sad" },
+                Protocol = DownloadProtocol.Torrent
             };
         }
 
